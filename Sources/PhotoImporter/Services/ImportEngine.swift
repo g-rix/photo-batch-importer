@@ -343,6 +343,16 @@ enum ImportEngine {
             written &+= UInt64(count)
         }
         try writer.synchronize()
+        
+        // GMR : Transfer original file creation date onto new copy
+        // Preserve the source modification date on the copied file.
+        // This is best-effort: we don't want metadata preservation to fail the import.
+        if let sourceDate = try? src.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate {
+            try? FileManager.default.setAttributes(
+                [.modificationDate: sourceDate],
+                ofItemAtPath: dst.path
+            )
+        }
 
         // Short read: we streamed fewer bytes than the source holds. See the
         // note above — the hash cannot detect this, so fail loudly instead of
