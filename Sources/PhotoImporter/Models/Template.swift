@@ -189,11 +189,14 @@ enum Template {
     }
 
     /// Strip characters that are problematic on Windows and/or macOS.
+    /// GMR replace "*" with "" as that is how RPD handles it. (*ist DS 2: _ist DS2: IST DS2)
+    /// GMR make all upper_case even though FAT would do that by default.
     private static func filesafe(_ component: String) -> String {
         var out = ""
         out.reserveCapacity(component.count)
         for ch in component {
             switch ch {
+            ///GMR
             case "*":
                 out.append("")
             case "<", ">", ":", "\"", "\\", "|", "?", "\0":
@@ -202,6 +205,7 @@ enum Template {
                 if let scalar = ch.unicodeScalars.first, scalar.value < 0x20 {
                     out.append("_")
                 } else {
+                    ///GMR
                     let uCh = Character(String(ch).uppercased())
                     out.append(uCh)
                 }
