@@ -147,12 +147,14 @@ enum Template {
         }
     }
 
+    //GMR handle _ist DS2 => IST DS2
+    //GMR handle PENTAX K5 IIs => PENTAX K5 IIS 
     private static func renderToken(_ token: TemplateToken, photo: PhotoFile, seq: UInt64, cardLabel: String) -> String {
         switch token {
         case .date(let fmt), .time(let fmt):
             return formatDate(photo.meta.date, fmt: fmt)
         case .cameraMake: return sanitizePathSep(photo.meta.cameraMake ?? unknown)
-        case .cameraModel: return sanitizePathSep(photo.meta.cameraModel ?? unknown)
+        case .cameraModel: return sanitizePathSep(photo.meta.cameraModel.uppercased() ?? unknown)
         case .cameraSerial: return sanitizePathSep(photo.meta.cameraSerial ?? unknown)
         case .cameraOwner: return sanitizePathSep(photo.meta.cameraOwner ?? unknown)
         case .lens: return sanitizePathSep(photo.meta.lens ?? unknown)
