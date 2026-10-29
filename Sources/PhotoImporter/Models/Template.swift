@@ -85,7 +85,7 @@ enum Template {
             return .date(fmt ?? "YYYY-MM-DD")
         case "time":
             return .time(fmt ?? "HH-mm-ss")
-        case "camera.make": return .
+        case "camera.make": return .cameraMake
         case "camera.model": return .cameraModel
         case "camera.serial": return .cameraSerial
         case "camera.owner": return .cameraOwner
