@@ -85,7 +85,7 @@ enum Template {
             return .date(fmt ?? "YYYY-MM-DD")
         case "time":
             return .time(fmt ?? "HH-mm-ss")
-        case "camera.make": return .cameraMake
+        case "camera.make": return .
         case "camera.model": return .cameraModel
         case "camera.serial": return .cameraSerial
         case "camera.owner": return .cameraOwner
@@ -146,23 +146,13 @@ enum Template {
         case .token(let t): return renderToken(t, photo: photo, seq: seq, cardLabel: cardLabel)
         }
     }
-
-    //GMR handle PENTAX _ist DS2 => PENTAX ist DS2
-    private static func fixCameraModel(from str: String) -> String {
-        let upperModel = str.uppercased()
-        return upperModel.replacingOccurrences(of: "_", with: "")
-    }
-    
-    //GMR handle PENTAX ist DS2 => PENTAX IST DS2    
-    //GMR handle PENTAX K5 IIs  => PENTAX K5 IIS     
+   
     private static func renderToken(_ token: TemplateToken, photo: PhotoFile, seq: UInt64, cardLabel: String) -> String {
         switch token {
         case .date(let fmt), .time(let fmt):
             return formatDate(photo.meta.date, fmt: fmt)
         case .cameraMake: return sanitizePathSep(photo.meta.cameraMake ?? unknown)
-        case .cameraModel: 
-            let newModel = fixCameraModel(from: photo.meta.cameraModel)
-            return sanitizePathSep(newModel ?? unknown)
+        case .cameraModel: return sanitizePathSep(photo.meta.cameraModel ?? unknown)
         case .cameraSerial: return sanitizePathSep(photo.meta.cameraSerial ?? unknown)
         case .cameraOwner: return sanitizePathSep(photo.meta.cameraOwner ?? unknown)
         case .lens: return sanitizePathSep(photo.meta.lens ?? unknown)
@@ -204,13 +194,16 @@ enum Template {
         out.reserveCapacity(component.count)
         for ch in component {
             switch ch {
-            case "<", ">", ":", "\"", "\\", "|", "?", "*", "\0":
+            case "*":
+                out.append("")
+            case "<", ">", ":", "\"", "\\", "|", "?", "\0":
                 out.append("_")
             default:
                 if let scalar = ch.unicodeScalars.first, scalar.value < 0x20 {
                     out.append("_")
                 } else {
-                    out.append(ch)
+                    let uCh = Character(String(ch).uppercased())
+                    out.append(uCh)
                 }
             }
         }
