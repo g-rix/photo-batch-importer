@@ -149,8 +149,8 @@ enum Template {
 
     //GMR handle PENTAX _ist DS2 => PENTAX ist DS2
     private static func fixCameraModel(from str: String) -> String {
-        str.uppercased()
-        str.replacingOccurrences(of: "_", with: "")
+        let upperModel = str.uppercased()
+        return upperModel.replacingOccurrences(of: "_", with: "")
     }
     
     //GMR handle PENTAX ist DS2 => PENTAX IST DS2    
