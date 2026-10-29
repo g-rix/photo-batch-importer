@@ -148,7 +148,8 @@ enum Template {
     }
 
     //GMR handle PENTAX _ist DS2 => PENTAX ist DS2
-    private static func removeUnderscores(from str: String) -> String {
+    private static func fixCameraModel(from str: String) -> String {
+        str.uppercased()
         str.replacingOccurrences(of: "_", with: "")
     }
     
@@ -159,7 +160,7 @@ enum Template {
         case .date(let fmt), .time(let fmt):
             return formatDate(photo.meta.date, fmt: fmt)
         case .cameraMake: return sanitizePathSep(photo.meta.cameraMake ?? unknown)
-        case .cameraModel: return sanitizePathSep(removeUnderscores(from: photo.meta.cameraModel.uppercased()) ?? unknown)
+        case .cameraModel: return sanitizePathSep(fixCameraModel(from: photo.meta.cameraModel) ?? unknown)
         case .cameraSerial: return sanitizePathSep(photo.meta.cameraSerial ?? unknown)
         case .cameraOwner: return sanitizePathSep(photo.meta.cameraOwner ?? unknown)
         case .lens: return sanitizePathSep(photo.meta.lens ?? unknown)
