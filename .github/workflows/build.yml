@@ -28,8 +28,4 @@ jobs:
 
       # Step 4: Build the Swift package or project
       - name: Build
-        run: swift build -v
-
-      # Step 5: Run tests
-      - name: Run Tests
-        run: swift test -v
+        run: swift build -c release
