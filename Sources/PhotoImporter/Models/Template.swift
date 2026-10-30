@@ -1,4 +1,4 @@
-Ximport Foundation
+import Foundation
 
 /// Naming-template DSL.
 ///
