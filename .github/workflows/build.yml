@@ -1,0 +1,35 @@
+name: Swift Build and Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    # Use the latest macOS runner which has Xcode and Swift pre-installed
+    runs-on: macos-latest
+
+    steps:
+      # Step 1: Check out the code from the repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Ensure Swift environment is set up (Optional for macOS, but recommended for version control)
+      - name: Setup Swift
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: '6.0' # Specify your required Swift version (use quotes)
+
+      # Step 3: Resolve package dependencies
+      - name: Resolve Dependencies
+        run: swift package resolve
+
+      # Step 4: Build the Swift package or project
+      - name: Build
+        run: swift build -v
+
+      # Step 5: Run tests
+      - name: Run Tests
+        run: swift test -v
