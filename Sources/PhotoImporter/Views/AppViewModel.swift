@@ -1207,7 +1207,7 @@ final class AppViewModel: ObservableObject {
         defaults.set(true, forKey: Self.supportPromptShownKey)
         // Short delay so a just-dismissed sheet (delete confirm) finishes
         // animating out before this one is presented.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?.showSupportPrompt = true
         }
     }
