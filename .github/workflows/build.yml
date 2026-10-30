@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     # Use the latest macOS runner which has Xcode and Swift pre-installed
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
       # Step 1: Check out the code from the repository
