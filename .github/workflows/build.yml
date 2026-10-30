@@ -20,7 +20,7 @@ jobs:
       - name: Setup Swift
         uses: swift-actions/setup-swift@v2
         with:
-          swift-version: '6.3' # Specify your required Swift version (use quotes)
+          swift-version: '6.0' # Specify your required Swift version (use quotes)
 
       # Step 3: Resolve package dependencies
       - name: Resolve Dependencies
