@@ -15,9 +15,9 @@ final class VolumeWatcher: ObservableObject {
         let refreshHandler: (Notification) -> Void = { [weak self] _ in
             Task { @MainActor in self?.refresh() }
         }
-        observers.append(nc.addObserver(forName: NSWorkspace.didMountNotification, object: nil, queue: nil) { @Sendable notification in self.refreshHandler(notification) } )
-        observers.append(nc.addObserver(forName: NSWorkspace.didUnmountNotification, object: nil, queue: nil) { @Sendable notification in self.refreshHandler(notification) } )
-        observers.append(nc.addObserver(forName: NSWorkspace.didRenameVolumeNotification, object: nil, queue: nil) { @Sendable notification in self.refreshHandler(notification) } )
+        observers.append(nc.addObserver(forName: NSWorkspace.didMountNotification, object: nil, queue: nil) { @Sendable notification in refreshHandler(notification) } )
+        observers.append(nc.addObserver(forName: NSWorkspace.didUnmountNotification, object: nil, queue: nil) { @Sendable notification in refreshHandler(notification) } )
+        observers.append(nc.addObserver(forName: NSWorkspace.didRenameVolumeNotification, object: nil, queue: nil) { @Sendable notification in refreshHandler(notification) } )
     }
 
     deinit {
