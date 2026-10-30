@@ -787,7 +787,7 @@ final class AppViewModel: ObservableObject {
                 }
                 map[item.src.path] = rel
             }
-            await MainActor.run {  [weak self] in
+            await MainActor.run {  [weak self, map] in
                 self?.destinations = map
             }
         }
@@ -969,7 +969,7 @@ final class AppViewModel: ObservableObject {
         ejectingMounts.insert(key)
         ejectErrors.removeValue(forKey: key)
         Task.detached(priority: .userInitiated) { [weak self] in
-            do {
+            do { [weak self] in
                 try Eject.eject(mountPoint: mountPoint)
                 await MainActor.run { self?.ejectingMounts.remove(key) }
             } catch {
