@@ -971,7 +971,9 @@ final class AppViewModel: ObservableObject {
         Task.detached(priority: .userInitiated) { [weak self] in
             do {
                 try Eject.eject(mountPoint: mountPoint)
-                await MainActor.run { self?.ejectingMounts.remove(key) }
+                await MainActor.run { [weak self] in
+                    self?.ejectingMounts.remove(key) 
+                }
             } catch {
                 await MainActor.run { [weak self] in
                     self?.ejectErrors[key] = error.localizedDescription
