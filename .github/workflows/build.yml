@@ -18,9 +18,9 @@ jobs:
 
       # Step 2: Ensure Swift environment is set up (Optional for macOS, but recommended for version control)
       - name: Setup Swift
-        uses: swift-actions/setup-swift@v2
+        uses: swift-actions/setup-swift@6a9b89d944675da1cc0f84b8b5c9a371b8af2d26
         with:
-          swift-version: "6.2" # Specify your required Swift version (use quotes)
+          swift-version: "6.4" # Specify your required Swift version (use quotes)
 
       # Step 3: Resolve package dependencies
       - name: Resolve Dependencies
