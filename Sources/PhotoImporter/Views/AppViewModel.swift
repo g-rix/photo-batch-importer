@@ -969,7 +969,7 @@ final class AppViewModel: ObservableObject {
         ejectingMounts.insert(key)
         ejectErrors.removeValue(forKey: key)
         Task.detached(priority: .userInitiated) { [weak self] in
-            do { [weak self] in
+            do {
                 try Eject.eject(mountPoint: mountPoint)
                 await MainActor.run { self?.ejectingMounts.remove(key) }
             } catch {
