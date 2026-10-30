@@ -731,7 +731,7 @@ final class AppViewModel: ObservableObject {
             defer { access?.stop() }
             let found = PhotoScanner.scan(at: scanRoot)
             guard !Task.isCancelled else { return }
-            await MainActor.run {
+            await MainActor.run { [weak self] in
                 guard let self = self else { return }
                 guard self.scanGeneration == generation else { return }
                 guard self.selectedVolume?.mountPoint == mount else { return }
@@ -787,7 +787,7 @@ final class AppViewModel: ObservableObject {
                 }
                 map[item.src.path] = rel
             }
-            await MainActor.run {
+            await MainActor.run {  [weak self] in
                 self?.destinations = map
             }
         }
@@ -973,7 +973,7 @@ final class AppViewModel: ObservableObject {
                 try Eject.eject(mountPoint: mountPoint)
                 await MainActor.run { self?.ejectingMounts.remove(key) }
             } catch {
-                await MainActor.run {
+                await MainActor.run { [weak self] in
                     self?.ejectErrors[key] = error.localizedDescription
                     self?.ejectingMounts.remove(key)
                 }
@@ -1098,7 +1098,7 @@ final class AppViewModel: ObservableObject {
             let hasBackup = plan.items.contains(where: { $0.backupDst != nil })
 
             if let last = plan.items.last {
-                await MainActor.run {
+                await MainActor.run { [weak self] in
                     self?.sequenceStore.commit(highestUsed: last.seq)
                     self?.totalItemsPlanned = plan.items.count
                     self?.totalBytesPlanned = plan.totalBytes
@@ -1118,7 +1118,7 @@ final class AppViewModel: ObservableObject {
                 }
             }
 
-            await MainActor.run {
+            await MainActor.run { [weak self] in
                 self?.importResult = TwoPhaseResult(primary: primaryResult, backup: nil)
                 if hasBackup {
                     self?.phaseMessage = "Completed copying to primary folder. You can use them while backup is in progress."
@@ -1129,7 +1129,7 @@ final class AppViewModel: ObservableObject {
             // Phase 2: backup (re-reads source, not primary).
             var backupEligible: Set<URL> = []
             if hasBackup {
-                await MainActor.run {
+                await MainActor.run { [weak self] in
                     self?.currentPhase = .backup
                     // Reset totals for the backup phase so the progress bar
                     // tracks just this phase.
@@ -1147,7 +1147,7 @@ final class AppViewModel: ObservableObject {
                         self?.progress = snapshot
                     }
                 }
-                await MainActor.run {
+                await MainActor.run { [weak self] in
                     self?.importResult = TwoPhaseResult(primary: primaryResult, backup: backupResult)
                     playCompletionChime()
                 }
@@ -1156,7 +1156,7 @@ final class AppViewModel: ObservableObject {
             // Finalize: delete-confirm + auto-eject only AFTER all copying
             // (including backup) is done, so the SD card stays mounted
             // through both phases.
-            await MainActor.run {
+            await MainActor.run { [weak self] in
                 guard let self = self else { return }
                 let sourcesRequiringBackup = Set(plan.items.compactMap { item in
                     item.backupDst == nil ? nil : item.src
@@ -1224,7 +1224,7 @@ final class AppViewModel: ObservableObject {
         Task.detached(priority: .userInitiated) { [weak self, cardAccess] in
             defer { cardAccess?.stop() }
             let r = Deletion.deleteSources(paths)
-            await MainActor.run {
+            await MainActor.run { [weak self] in
                 self?.deleteResult = r
                 if self?.runOptions?.autoEject == true {
                     self?.doEject(mountPoint: mount)
