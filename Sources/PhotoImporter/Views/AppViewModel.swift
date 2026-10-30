@@ -1158,7 +1158,7 @@ final class AppViewModel: ObservableObject {
             // Finalize: delete-confirm + auto-eject only AFTER all copying
             // (including backup) is done, so the SD card stays mounted
             // through both phases.
-            await MainActor.run { [weak self] in
+            await MainActor.run { [weak self, primaryEligible, backupEligible] in
                 guard let self = self else { return }
                 let sourcesRequiringBackup = Set(plan.items.compactMap { item in
                     item.backupDst == nil ? nil : item.src
@@ -1207,7 +1207,7 @@ final class AppViewModel: ObservableObject {
         defaults.set(true, forKey: Self.supportPromptShownKey)
         // Short delay so a just-dismissed sheet (delete confirm) finishes
         // animating out before this one is presented.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { self] in
             self?.showSupportPrompt = true
         }
     }
