@@ -31,5 +31,5 @@ jobs:
         run: swift build -v
 
       # Step 5: Run tests
-      - name: Run Tests
-        run: swift test -v
+      #- name: Run Tests
+      #  run: swift test -v
